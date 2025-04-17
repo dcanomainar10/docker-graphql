@@ -24,6 +24,7 @@ jobs:
           major_pattern: "major:"
           minor_pattern: "feat:"
           format: "${major}.${minor}.${patch}-prerelease${increment}"
+        id: version
       
       - name: Docker Login
         env:
@@ -34,16 +35,16 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           echo "Version $NEW_VERSION!!!!"
 
-      # - name: Build Docker Image
-      #   env:
-      #     NEW_VERSION: ${{ steps.version.outputs.version }}
-      #   run: |
-      #     docker build -t armarius/docker-graphql:$NEW_VERSION .
-      #     docker build -t armarius/docker-graphql:latest .
+      - name: Build Docker Image
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker build -t armarius/docker-graphql:$NEW_VERSION .
+          docker build -t armarius/docker-graphql:latest .
 
-      # - name: Push Docker Image
-      #   env:
-      #     NEW_VERSION: ${{ steps.version.outputs.version }}
-      #   run: |
-      #     docker push armarius/docker-graphql:$NEW_VERSION
-      #     docker push armarius/docker-graphql:latest
+      - name: Push Docker Image
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker push armarius/docker-graphql:$NEW_VERSION
+          docker push armarius/docker-graphql:latest
